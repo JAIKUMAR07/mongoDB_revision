@@ -1,19 +1,31 @@
-const cookieParser = require('cookie-parser');
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 
 const app = express();
-app.use(cookieParser()); // good!
+app.use(cookieParser());
 
-// Set the cookie
+// Set the cookie and hash a password
 app.get('/', (req, res) => {
-  res.cookie('name', 'John Doe');
-  res.send('Cookie has been set');
+  const merapassword = "rahul123";
+
+  bcrypt.genSalt(10, function(err, salt) {
+    console.log("ye rha salt: " + salt);
+
+    bcrypt.hash(merapassword, salt, function(err, hash) {
+      console.log("ye rha hash: " + hash);
+
+      // Set a cookie with the hashed password
+      res.cookie('pass', hash);
+      res.send("Password hashed and cookie set!");
+    });
+  });
 });
 
 // Read the cookie
 app.get('/read', (req, res) => {
-  console.log(req.cookies); // Logs all cookies
-  res.send('Cookie read: ' + req.cookies.name); // only one res.send
+  console.log(req.cookies); // Show all cookies
+  res.send('Cookie read: ' + req.cookies.pass);
 });
 
 app.listen(3000, () => {
