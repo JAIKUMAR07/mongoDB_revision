@@ -6,20 +6,12 @@ const app = express();
 app.use(cookieParser());
 
 // Set the cookie and hash a password
-app.get('/', (req, res) => {
-  const merapassword = "rahul123";
-
-  bcrypt.genSalt(10, function(err, salt) {
-    console.log("ye rha salt: " + salt);
-
-    bcrypt.hash(merapassword, salt, function(err, hash) {
-      console.log("ye rha hash: " + hash);
-
-      // Set a cookie with the hashed password
-      res.cookie('pass', hash);
-      res.send("Password hashed and cookie set!");
-    });
+app.get('/', (req, res) => { // Load hash from your password DB.
+  bcrypt.compare("rahul12", "$2b$10$.YjSYy11sxvj1EWef.1NjuxaL/dzHlVTuZu4B5/b5ctuPptH5QwGW", function(err, result) {
+      // result == true 
+      console.log("haa match kr rha " + result);
   });
+  
 });
 
 // Read the cookie
